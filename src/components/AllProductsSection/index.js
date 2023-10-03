@@ -1,5 +1,6 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
+import Loader from 'react-loader-spinner'
 
 import ProductCard from '../ProductCard'
 import './index.css'
@@ -7,6 +8,7 @@ import './index.css'
 class AllProductsSection extends Component {
   state = {
     productsList: [],
+    isLoading: true,
   }
 
   componentDidMount() {
@@ -33,20 +35,32 @@ class AllProductsSection extends Component {
         imageUrl: product.image_url,
         rating: product.rating,
       }))
-      this.setState({productsList: updatedData})
+      this.setState({productsList: updatedData, isLoading: false})
     }
   }
 
   renderProductsList = () => {
-    const {productsList} = this.state
+    const {productsList, isLoading} = this.state
     return (
       <div>
-        <h1 className="products-list-heading">All Products</h1>
-        <ul className="products-list">
-          {productsList.map(product => (
-            <ProductCard productData={product} key={product.id} />
-          ))}
-        </ul>
+        {isLoading ? (
+          <Loader
+            type="TailSpin"
+            color="#00BFFF"
+            height={50}
+            width={50}
+            className="products-loader-container"
+          />
+        ) : (
+          <>
+            <h1 className="products-list-heading">All Products</h1>
+            <ul className="products-list">
+              {productsList.map(product => (
+                <ProductCard productData={product} key={product.id} />
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     )
   }
